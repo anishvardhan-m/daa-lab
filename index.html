@@ -1,0 +1,1128 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<style>[hidden]{display:none!important}body{margin:0}</style>
+<title>DAA Lab Programs</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600&family=IBM+Plex+Sans:wght@400;600&display=swap">
+<style>
+/* Layout: single reading column, jump chips, one code card per program */
+:root{--bg:#f5f6f8;--fg:#1c2330;--muted:#5d6878;--card:#ffffff;--line:#dde1e8;--accent:#2b5fd9;--code:#eef1f6;
+--sans:"IBM Plex Sans",system-ui,sans-serif;--mono:"IBM Plex Mono",ui-monospace,Menlo,Consolas,monospace}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#13161c;--fg:#e4e8ef;--muted:#98a2b3;--card:#1b1f27;--line:#2c323d;--accent:#7aa2ff;--code:#11141a;color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#13161c;--fg:#e4e8ef;--muted:#98a2b3;--card:#1b1f27;--line:#2c323d;--accent:#7aa2ff;--code:#11141a;color-scheme:dark}
+body{background:var(--bg);color:var(--fg);font-family:var(--sans);padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:24px 48px}
+main{max-width:860px;margin:0 auto;display:flex;flex-direction:column;gap:20px}
+h1{font-size:1.5rem;margin:0;text-wrap:balance}
+.sub{color:var(--muted);margin:4px 0 0}
+.top{display:flex;flex-wrap:wrap;gap:12px;align-items:center;justify-content:space-between}
+nav{display:flex;flex-wrap:wrap;gap:8px}
+nav a{font-size:.8rem;color:var(--accent);text-decoration:none;border:1px solid var(--line);border-radius:999px;padding:4px 10px;background:var(--card)}
+section{background:var(--card);border:1px solid var(--line);border-radius:10px;overflow:hidden}
+.head{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:10px 14px;border-bottom:1px solid var(--line)}
+h2{font-size:1rem;margin:0}
+button{font:600 .85rem var(--sans);background:var(--accent);color:var(--card);border:0;border-radius:6px;padding:7px 14px;cursor:pointer}
+button:focus-visible{outline:2px solid var(--fg);outline-offset:2px}
+.code{overflow-x:auto;background:var(--code)}
+pre{margin:0;padding:14px;font:13px/1.5 var(--mono);tab-size:4}
+</style>
+</head>
+<body>
+<main>
+<div class="top"><div><h1>DAA Lab Programs</h1><p class="sub">PC653CS · Internal-1 · 9 programs in C</p></div><button type="button" id="all">Copy all</button></div>
+<nav><a href="#p0">1a) DFS - Graph Connectivity</a><a href="#p1">1b) BFS</a><a href="#p2">2a) Merge Sort</a><a href="#p3">2b) Quick Sort</a><a href="#p4">3a) Knapsack - Brute Force</a><a href="#p5">3b) Knapsack - Greedy</a><a href="#p6">3c) 0/1 Knapsack - Dynamic Programming</a><a href="#p7">4a) Prim&#x27;s Algorithm</a><a href="#p8">4b) Kruskal&#x27;s Algorithm</a></nav>
+<section id="p0"><div class="head"><h2>1a) DFS - Graph Connectivity</h2><button type="button" data-i="0">Copy</button></div><div class="code"><pre id="c0">#include&lt;stdio.h&gt;
+int a[20][20], reach[20], n;
+
+void dfs(int v)
+{
+    int i;
+    reach[v] = 1;
+    for(i = 1; i &lt;= n; i++)
+    {
+        if(a[v][i] &amp;&amp; !reach[i])
+        {
+            printf(&quot;\n %d-&gt;%d&quot;, v, i);
+            dfs(i);
+        }
+    }
+}
+
+void main()
+{
+    int i, j, count = 0;
+    printf(&quot;\n Enter number of vertices:&quot;);
+    scanf(&quot;%d&quot;, &amp;n);
+    for(i = 1; i &lt;= n; i++)
+    {
+        reach[i] = 0;
+        for(j = 1; j &lt;= n; j++)
+            a[i][j] = 0;
+    }
+    printf(&quot;\n Enter the adjacency matrix:\n&quot;);
+    for(i = 1; i &lt;= n; i++)
+        for(j = 1; j &lt;= n; j++)
+            scanf(&quot;%d&quot;, &amp;a[i][j]);
+    dfs(1);
+    printf(&quot;\n&quot;);
+    for(i = 1; i &lt;= n; i++)
+    {
+        if(reach[i])
+            count++;
+    }
+    if(count == n)
+        printf(&quot;\n Graph is connected&quot;);
+    else
+        printf(&quot;\n Graph is NOT connected&quot;);
+}
+</pre></div></section><section id="p1"><div class="head"><h2>1b) BFS</h2><button type="button" data-i="1">Copy</button></div><div class="code"><pre id="c1">#include&lt;stdio.h&gt;
+int a[20][20], visited[20], q[20], n, f = 0, r = -1;
+
+void bfs(int v)
+{
+    int i;
+    visited[v] = 1;
+    q[++r] = v;
+    while(f &lt;= r)
+    {
+        v = q[f++];
+        printf(&quot;%d &quot;, v);
+        for(i = 1; i &lt;= n; i++)
+        {
+            if(a[v][i] &amp;&amp; !visited[i])
+            {
+                visited[i] = 1;
+                q[++r] = i;
+            }
+        }
+    }
+}
+
+void main()
+{
+    int i, j, v, count = 0;
+    printf(&quot;\n Enter number of vertices:&quot;);
+    scanf(&quot;%d&quot;, &amp;n);
+    for(i = 1; i &lt;= n; i++)
+        visited[i] = 0;
+    printf(&quot;\n Enter the adjacency matrix:\n&quot;);
+    for(i = 1; i &lt;= n; i++)
+        for(j = 1; j &lt;= n; j++)
+            scanf(&quot;%d&quot;, &amp;a[i][j]);
+    printf(&quot;\n Enter the starting vertex:&quot;);
+    scanf(&quot;%d&quot;, &amp;v);
+    printf(&quot;\n BFS traversal: &quot;);
+    bfs(v);
+    for(i = 1; i &lt;= n; i++)
+    {
+        if(visited[i])
+            count++;
+    }
+    if(count == n)
+        printf(&quot;\n Graph is connected&quot;);
+    else
+        printf(&quot;\n Graph is NOT connected&quot;);
+}
+</pre></div></section><section id="p2"><div class="head"><h2>2a) Merge Sort</h2><button type="button" data-i="2">Copy</button></div><div class="code"><pre id="c2">#include &lt;stdio.h&gt;
+#include &lt;stdlib.h&gt;
+#include &lt;math.h&gt;
+#include &lt;time.h&gt;
+
+void Merge(int a[], int low, int mid, int high)
+{
+    int i, j, k, temp[high - low + 1];
+    i = low;
+    k = 0;
+    j = mid + 1;
+    while(i &lt;= mid &amp;&amp; j &lt;= high)
+    {
+        if(a[i] &lt; a[j])
+        {
+            temp[k] = a[i];
+            k++;
+            i++;
+        }
+        else
+        {
+            temp[k] = a[j];
+            k++;
+            j++;
+        }
+    }
+    while(i &lt;= mid)
+    {
+        temp[k] = a[i];
+        k++;
+        i++;
+    }
+    while(j &lt;= high)
+    {
+        temp[k] = a[j];
+        k++;
+        j++;
+    }
+    for(i = low; i &lt;= high; i++)
+    {
+        a[i] = temp[i - low];
+    }
+}
+
+void MergeSort(int a[], int low, int high)
+{
+    int mid;
+    if(low &lt; high)
+    {
+        mid = (low + high) / 2;
+        MergeSort(a, low, mid);
+        MergeSort(a, mid + 1, high);
+        Merge(a, low, mid, high);
+    }
+}
+
+void main()
+{
+    int n, a[100], k;
+    clock_t st, et;
+    double ts;
+    printf(&quot;\n Enter How many Numbers: &quot;);
+    scanf(&quot;%d&quot;, &amp;n);
+    printf(&quot;\nThe Random Numbers are:\n&quot;);
+    for(k = 1; k &lt;= n; k++)
+    {
+        a[k] = rand() % (100 - 50 + 1) + 50;
+        printf(&quot;%d\t&quot;, a[k]);
+    }
+    st = clock();
+    for(k = 1; k &lt; 10000; k++)
+        MergeSort(a, 1, n);
+    et = clock();
+    ts = (float)(et - st) / CLOCKS_PER_SEC;
+    ts = ts / 10000;
+    printf(&quot;\nSorted Numbers are: \n &quot;);
+    for(k = 1; k &lt;= n; k++)
+        printf(&quot;%d\t&quot;, a[k]);
+    printf(&quot;\nThe time taken is %e sec&quot;, ts);
+}
+</pre></div></section><section id="p3"><div class="head"><h2>2b) Quick Sort</h2><button type="button" data-i="3">Copy</button></div><div class="code"><pre id="c3">#include &lt;stdio.h&gt;
+#include &lt;stdlib.h&gt;
+#include &lt;math.h&gt;
+#include &lt;time.h&gt;
+
+void Exch(int *p, int *q)
+{
+    int temp = *p;
+    *p = *q;
+    *q = temp;
+}
+
+int partition(int a[], int low, int high)
+{
+    int key = low;
+    int i = low + 1;
+    int j = high;
+    while(i &lt;= j)
+    {
+        while(a[i] &lt;= a[key])
+            i = i + 1;
+        while(a[j] &gt; a[key])
+            j = j - 1;
+        if(i &lt; j)
+            Exch(&amp;a[i], &amp;a[j]);
+    }
+    Exch(&amp;a[j], &amp;a[key]);
+    return j;
+}
+
+void QuickSort(int a[], int low, int high)
+{
+    int j;
+    if(low &gt;= high)
+        return;
+    j = partition(a, low, high);
+    QuickSort(a, low, j - 1);
+    QuickSort(a, j + 1, high);
+}
+
+void main()
+{
+    int n, a[100], k;
+    clock_t st, et;
+    double ts;
+    printf(&quot;\n Enter How many Numbers: &quot;);
+    scanf(&quot;%d&quot;, &amp;n);
+    printf(&quot;\nThe Random Numbers are:\n&quot;);
+    for(k = 1; k &lt;= n; k++)
+    {
+        a[k] = rand() % (100 - 50 + 1) + 50;
+        printf(&quot;%d\t&quot;, a[k]);
+    }
+    st = clock();
+    for(k = 1; k &lt; 10000; k++)
+        QuickSort(a, 1, n);
+    et = clock();
+    ts = (float)(et - st) / CLOCKS_PER_SEC;
+    ts = ts / 10000;
+    printf(&quot;\nSorted Numbers are: \n &quot;);
+    for(k = 1; k &lt;= n; k++)
+        printf(&quot;%d\t&quot;, a[k]);
+    printf(&quot;\nThe time taken is %e sec&quot;, ts);
+}
+</pre></div></section><section id="p4"><div class="head"><h2>3a) Knapsack - Brute Force</h2><button type="button" data-i="4">Copy</button></div><div class="code"><pre id="c4">#include&lt;stdio.h&gt;
+
+void main()
+{
+    int n, i, j, w[20], p[20], cap, tw, tp, maxp = 0, best = 0, total;
+    printf(&quot;\nEnter the number of items: &quot;);
+    scanf(&quot;%d&quot;, &amp;n);
+    printf(&quot;Enter the profit and weight of each item\n&quot;);
+    for(i = 0; i &lt; n; i++)
+    {
+        printf(&quot;For item no %d\n&quot;, i + 1);
+        scanf(&quot;%d%d&quot;, &amp;p[i], &amp;w[i]);
+    }
+    printf(&quot;\nEnter the capacity: &quot;);
+    scanf(&quot;%d&quot;, &amp;cap);
+    total = 1 &lt;&lt; n;
+    for(i = 0; i &lt; total; i++)
+    {
+        tw = 0;
+        tp = 0;
+        for(j = 0; j &lt; n; j++)
+        {
+            if(i &amp; (1 &lt;&lt; j))
+            {
+                tw += w[j];
+                tp += p[j];
+            }
+        }
+        if(tw &lt;= cap &amp;&amp; tp &gt; maxp)
+        {
+            maxp = tp;
+            best = i;
+        }
+    }
+    printf(&quot;\nItems included are\nItem\tweight\tprofit\n&quot;);
+    for(j = 0; j &lt; n; j++)
+    {
+        if(best &amp; (1 &lt;&lt; j))
+            printf(&quot;%d\t%d\t%d\n&quot;, j + 1, w[j], p[j]);
+    }
+    printf(&quot;Total profit = %d\n&quot;, maxp);
+}
+</pre></div></section><section id="p5"><div class="head"><h2>3b) Knapsack - Greedy</h2><button type="button" data-i="5">Copy</button></div><div class="code"><pre id="c5">#include&lt;stdio.h&gt;
+
+void knapsack(int n, float weight[], float profit[], float capacity)
+{
+    float x[20], tp = 0;
+    int i;
+    float u;
+    u = capacity;
+    for(i = 0; i &lt; n; i++)
+        x[i] = 0.0;
+    for(i = 0; i &lt; n; i++)
+    {
+        if(weight[i] &gt; u)
+            break;
+        else
+        {
+            x[i] = 1.0;
+            tp = tp + profit[i];
+            u = u - weight[i];
+        }
+    }
+    if(i &lt; n)
+        x[i] = (u / weight[i]);
+    tp = tp + (x[i] * profit[i]);
+    printf(&quot;\nThe result vector is:- &quot;);
+    for(i = 0; i &lt; n; i++)
+        printf(&quot;%f\t&quot;, x[i]);
+    printf(&quot;\nMaximum profit is:- %f&quot;, tp);
+}
+
+int main()
+{
+    float weight[20], profit[20], capacity;
+    int num, i, j;
+    float ratio[20], temp;
+    printf(&quot;\nEnter the no. of objects:- &quot;);
+    scanf(&quot;%d&quot;, &amp;num);
+    printf(&quot;\nEnter the weights of %d objects :- &quot;, num);
+    for(i = 0; i &lt; num; i++)
+        scanf(&quot;%f&quot;, &amp;weight[i]);
+    printf(&quot;\nEnter the profits of %d objects :- &quot;, num);
+    for(i = 0; i &lt; num; i++)
+        scanf(&quot;%f&quot;, &amp;profit[i]);
+    printf(&quot;\nEnter the capacity of knapsack:- &quot;);
+    scanf(&quot;%f&quot;, &amp;capacity);
+    for(i = 0; i &lt; num; i++)
+        ratio[i] = profit[i] / weight[i];
+    for(i = 0; i &lt; num; i++)
+    {
+        for(j = 0; j &lt; num - i - 1; j++)
+        {
+            if(ratio[j] &lt; ratio[j + 1])
+            {
+                temp = ratio[j];
+                ratio[j] = ratio[j + 1];
+                ratio[j + 1] = temp;
+
+                temp = weight[j];
+                weight[j] = weight[j + 1];
+                weight[j + 1] = temp;
+
+                temp = profit[j];
+                profit[j] = profit[j + 1];
+                profit[j + 1] = temp;
+            }
+        }
+    }
+    knapsack(num, weight, profit, capacity);
+    return(0);
+}
+</pre></div></section><section id="p6"><div class="head"><h2>3c) 0/1 Knapsack - Dynamic Programming</h2><button type="button" data-i="6">Copy</button></div><div class="code"><pre id="c6">#include&lt;stdio.h&gt;
+int w[10], p[10], v[10][100], n, i, j, cap, x[10] = {0};
+
+int max(int i, int j)
+{
+    return ((i &gt; j) ? i : j);
+}
+
+int knap(int i, int j)
+{
+    int value;
+    if(v[i][j] &lt; 0)
+    {
+        if(j &lt; w[i])
+            value = knap(i - 1, j);
+        else
+            value = max(knap(i - 1, j), p[i] + knap(i - 1, j - w[i]));
+        v[i][j] = value;
+    }
+    return(v[i][j]);
+}
+
+void main()
+{
+    int profit, count = 0;
+    printf(&quot;\nEnter the number of elements\n&quot;);
+    scanf(&quot;%d&quot;, &amp;n);
+    printf(&quot;Enter the profit and weights of the elements\n&quot;);
+    for(i = 1; i &lt;= n; i++)
+    {
+        printf(&quot;For item no %d\n&quot;, i);
+        scanf(&quot;%d%d&quot;, &amp;p[i], &amp;w[i]);
+    }
+    printf(&quot;\nEnter the capacity \n&quot;);
+    scanf(&quot;%d&quot;, &amp;cap);
+    for(i = 0; i &lt;= n; i++)
+    {
+        for(j = 0; j &lt;= cap; j++)
+        {
+            if((i == 0) || (j == 0))
+                v[i][j] = 0;
+            else
+                v[i][j] = -1;
+        }
+    }
+    profit = knap(n, cap);
+    i = n;
+    j = cap;
+    while(j != 0 &amp;&amp; i != 0)
+    {
+        if(v[i][j] != v[i - 1][j])
+        {
+            x[i] = 1;
+            j = j - w[i];
+            i--;
+        }
+        else
+            i--;
+    }
+    printf(&quot;Items included are\n&quot;);
+    printf(&quot;Sl.no\tweight\tprofit\n&quot;);
+    for(i = 1; i &lt;= n; i++)
+    {
+        if(x[i])
+            printf(&quot;%d\t%d\t%d\n&quot;, ++count, w[i], p[i]);
+    }
+    printf(&quot;Total profit = %d\n&quot;, profit);
+}
+</pre></div></section><section id="p7"><div class="head"><h2>4a) Prim&#x27;s Algorithm</h2><button type="button" data-i="7">Copy</button></div><div class="code"><pre id="c7">#include&lt;stdio.h&gt;
+int a, b, u, v, n, i, j, ne = 1;
+int visited[10] = {0}, min, mincost = 0, cost[10][10];
+
+void main()
+{
+    printf(&quot;\n Enter the number of nodes:&quot;);
+    scanf(&quot;%d&quot;, &amp;n);
+    printf(&quot;\n Enter the adjacency matrix:\n&quot;);
+    for(i = 1; i &lt;= n; i++)
+    {
+        for(j = 1; j &lt;= n; j++)
+        {
+            scanf(&quot;%d&quot;, &amp;cost[i][j]);
+            if(cost[i][j] == 0)
+                cost[i][j] = 999;
+        }
+    }
+    visited[1] = 1;
+    printf(&quot;\n&quot;);
+    while(ne &lt; n)
+    {
+        for(i = 1, min = 999; i &lt;= n; i++)
+        {
+            for(j = 1; j &lt;= n; j++)
+            {
+                if(cost[i][j] &lt; min)
+                {
+                    if(visited[i] != 0)
+                    {
+                        min = cost[i][j];
+                        a = u = i;
+                        b = v = j;
+                    }
+                }
+            }
+        }
+        if(visited[u] == 0 || visited[v] == 0)
+        {
+            printf(&quot;\n Edge %d:(%d %d) cost:%d&quot;, ne++, a, b, min);
+            mincost += min;
+            visited[b] = 1;
+        }
+        cost[a][b] = cost[b][a] = 999;
+    }
+    printf(&quot;\n Minimum cost=%d&quot;, mincost);
+}
+</pre></div></section><section id="p8"><div class="head"><h2>4b) Kruskal&#x27;s Algorithm</h2><button type="button" data-i="8">Copy</button></div><div class="code"><pre id="c8">#include&lt;stdio.h&gt;
+#include&lt;stdlib.h&gt;
+int i, j, k, a, b, u, v, n, ne = 1;
+int min, mincost = 0, cost[9][9], parent[9];
+int find(int);
+int uni(int, int);
+
+void main()
+{
+    printf(&quot;\n\n\tImplementation of Kruskal&#x27;s algorithm\n\n&quot;);
+    printf(&quot;\nEnter the no. of vertices\n&quot;);
+    scanf(&quot;%d&quot;, &amp;n);
+    printf(&quot;\nEnter the cost adjacency matrix\n&quot;);
+    for(i = 1; i &lt;= n; i++)
+    {
+        for(j = 1; j &lt;= n; j++)
+        {
+            scanf(&quot;%d&quot;, &amp;cost[i][j]);
+            if(cost[i][j] == 0)
+                cost[i][j] = 999;
+        }
+    }
+    printf(&quot;\nThe edges of Minimum Cost Spanning Tree are\n\n&quot;);
+    while(ne &lt; n)
+    {
+        for(i = 1, min = 999; i &lt;= n; i++)
+        {
+            for(j = 1; j &lt;= n; j++)
+            {
+                if(cost[i][j] &lt; min)
+                {
+                    min = cost[i][j];
+                    a = u = i;
+                    b = v = j;
+                }
+            }
+        }
+        u = find(u);
+        v = find(v);
+        if(uni(u, v))
+        {
+            printf(&quot;\n%d edge (%d,%d) =%d\n&quot;, ne++, a, b, min);
+            mincost += min;
+        }
+        cost[a][b] = cost[b][a] = 999;
+    }
+    printf(&quot;\n\tMinimum cost = %d\n&quot;, mincost);
+}
+
+int find(int i)
+{
+    while(parent[i])
+        i = parent[i];
+    return i;
+}
+
+int uni(int i, int j)
+{
+    if(i != j)
+    {
+        parent[j] = i;
+        return 1;
+    }
+    return 0;
+}
+</pre></div></section>
+<pre id="allsrc" hidden>/* ===================== 1a) DFS - Graph Connectivity ===================== */
+#include&lt;stdio.h&gt;
+int a[20][20], reach[20], n;
+
+void dfs(int v)
+{
+    int i;
+    reach[v] = 1;
+    for(i = 1; i &lt;= n; i++)
+    {
+        if(a[v][i] &amp;&amp; !reach[i])
+        {
+            printf(&quot;\n %d-&gt;%d&quot;, v, i);
+            dfs(i);
+        }
+    }
+}
+
+void main()
+{
+    int i, j, count = 0;
+    printf(&quot;\n Enter number of vertices:&quot;);
+    scanf(&quot;%d&quot;, &amp;n);
+    for(i = 1; i &lt;= n; i++)
+    {
+        reach[i] = 0;
+        for(j = 1; j &lt;= n; j++)
+            a[i][j] = 0;
+    }
+    printf(&quot;\n Enter the adjacency matrix:\n&quot;);
+    for(i = 1; i &lt;= n; i++)
+        for(j = 1; j &lt;= n; j++)
+            scanf(&quot;%d&quot;, &amp;a[i][j]);
+    dfs(1);
+    printf(&quot;\n&quot;);
+    for(i = 1; i &lt;= n; i++)
+    {
+        if(reach[i])
+            count++;
+    }
+    if(count == n)
+        printf(&quot;\n Graph is connected&quot;);
+    else
+        printf(&quot;\n Graph is NOT connected&quot;);
+}
+
+
+/* ===================== 1b) BFS ===================== */
+#include&lt;stdio.h&gt;
+int a[20][20], visited[20], q[20], n, f = 0, r = -1;
+
+void bfs(int v)
+{
+    int i;
+    visited[v] = 1;
+    q[++r] = v;
+    while(f &lt;= r)
+    {
+        v = q[f++];
+        printf(&quot;%d &quot;, v);
+        for(i = 1; i &lt;= n; i++)
+        {
+            if(a[v][i] &amp;&amp; !visited[i])
+            {
+                visited[i] = 1;
+                q[++r] = i;
+            }
+        }
+    }
+}
+
+void main()
+{
+    int i, j, v, count = 0;
+    printf(&quot;\n Enter number of vertices:&quot;);
+    scanf(&quot;%d&quot;, &amp;n);
+    for(i = 1; i &lt;= n; i++)
+        visited[i] = 0;
+    printf(&quot;\n Enter the adjacency matrix:\n&quot;);
+    for(i = 1; i &lt;= n; i++)
+        for(j = 1; j &lt;= n; j++)
+            scanf(&quot;%d&quot;, &amp;a[i][j]);
+    printf(&quot;\n Enter the starting vertex:&quot;);
+    scanf(&quot;%d&quot;, &amp;v);
+    printf(&quot;\n BFS traversal: &quot;);
+    bfs(v);
+    for(i = 1; i &lt;= n; i++)
+    {
+        if(visited[i])
+            count++;
+    }
+    if(count == n)
+        printf(&quot;\n Graph is connected&quot;);
+    else
+        printf(&quot;\n Graph is NOT connected&quot;);
+}
+
+
+/* ===================== 2a) Merge Sort ===================== */
+#include &lt;stdio.h&gt;
+#include &lt;stdlib.h&gt;
+#include &lt;math.h&gt;
+#include &lt;time.h&gt;
+
+void Merge(int a[], int low, int mid, int high)
+{
+    int i, j, k, temp[high - low + 1];
+    i = low;
+    k = 0;
+    j = mid + 1;
+    while(i &lt;= mid &amp;&amp; j &lt;= high)
+    {
+        if(a[i] &lt; a[j])
+        {
+            temp[k] = a[i];
+            k++;
+            i++;
+        }
+        else
+        {
+            temp[k] = a[j];
+            k++;
+            j++;
+        }
+    }
+    while(i &lt;= mid)
+    {
+        temp[k] = a[i];
+        k++;
+        i++;
+    }
+    while(j &lt;= high)
+    {
+        temp[k] = a[j];
+        k++;
+        j++;
+    }
+    for(i = low; i &lt;= high; i++)
+    {
+        a[i] = temp[i - low];
+    }
+}
+
+void MergeSort(int a[], int low, int high)
+{
+    int mid;
+    if(low &lt; high)
+    {
+        mid = (low + high) / 2;
+        MergeSort(a, low, mid);
+        MergeSort(a, mid + 1, high);
+        Merge(a, low, mid, high);
+    }
+}
+
+void main()
+{
+    int n, a[100], k;
+    clock_t st, et;
+    double ts;
+    printf(&quot;\n Enter How many Numbers: &quot;);
+    scanf(&quot;%d&quot;, &amp;n);
+    printf(&quot;\nThe Random Numbers are:\n&quot;);
+    for(k = 1; k &lt;= n; k++)
+    {
+        a[k] = rand() % (100 - 50 + 1) + 50;
+        printf(&quot;%d\t&quot;, a[k]);
+    }
+    st = clock();
+    for(k = 1; k &lt; 10000; k++)
+        MergeSort(a, 1, n);
+    et = clock();
+    ts = (float)(et - st) / CLOCKS_PER_SEC;
+    ts = ts / 10000;
+    printf(&quot;\nSorted Numbers are: \n &quot;);
+    for(k = 1; k &lt;= n; k++)
+        printf(&quot;%d\t&quot;, a[k]);
+    printf(&quot;\nThe time taken is %e sec&quot;, ts);
+}
+
+
+/* ===================== 2b) Quick Sort ===================== */
+#include &lt;stdio.h&gt;
+#include &lt;stdlib.h&gt;
+#include &lt;math.h&gt;
+#include &lt;time.h&gt;
+
+void Exch(int *p, int *q)
+{
+    int temp = *p;
+    *p = *q;
+    *q = temp;
+}
+
+int partition(int a[], int low, int high)
+{
+    int key = low;
+    int i = low + 1;
+    int j = high;
+    while(i &lt;= j)
+    {
+        while(a[i] &lt;= a[key])
+            i = i + 1;
+        while(a[j] &gt; a[key])
+            j = j - 1;
+        if(i &lt; j)
+            Exch(&amp;a[i], &amp;a[j]);
+    }
+    Exch(&amp;a[j], &amp;a[key]);
+    return j;
+}
+
+void QuickSort(int a[], int low, int high)
+{
+    int j;
+    if(low &gt;= high)
+        return;
+    j = partition(a, low, high);
+    QuickSort(a, low, j - 1);
+    QuickSort(a, j + 1, high);
+}
+
+void main()
+{
+    int n, a[100], k;
+    clock_t st, et;
+    double ts;
+    printf(&quot;\n Enter How many Numbers: &quot;);
+    scanf(&quot;%d&quot;, &amp;n);
+    printf(&quot;\nThe Random Numbers are:\n&quot;);
+    for(k = 1; k &lt;= n; k++)
+    {
+        a[k] = rand() % (100 - 50 + 1) + 50;
+        printf(&quot;%d\t&quot;, a[k]);
+    }
+    st = clock();
+    for(k = 1; k &lt; 10000; k++)
+        QuickSort(a, 1, n);
+    et = clock();
+    ts = (float)(et - st) / CLOCKS_PER_SEC;
+    ts = ts / 10000;
+    printf(&quot;\nSorted Numbers are: \n &quot;);
+    for(k = 1; k &lt;= n; k++)
+        printf(&quot;%d\t&quot;, a[k]);
+    printf(&quot;\nThe time taken is %e sec&quot;, ts);
+}
+
+
+/* ===================== 3a) Knapsack - Brute Force ===================== */
+#include&lt;stdio.h&gt;
+
+void main()
+{
+    int n, i, j, w[20], p[20], cap, tw, tp, maxp = 0, best = 0, total;
+    printf(&quot;\nEnter the number of items: &quot;);
+    scanf(&quot;%d&quot;, &amp;n);
+    printf(&quot;Enter the profit and weight of each item\n&quot;);
+    for(i = 0; i &lt; n; i++)
+    {
+        printf(&quot;For item no %d\n&quot;, i + 1);
+        scanf(&quot;%d%d&quot;, &amp;p[i], &amp;w[i]);
+    }
+    printf(&quot;\nEnter the capacity: &quot;);
+    scanf(&quot;%d&quot;, &amp;cap);
+    total = 1 &lt;&lt; n;
+    for(i = 0; i &lt; total; i++)
+    {
+        tw = 0;
+        tp = 0;
+        for(j = 0; j &lt; n; j++)
+        {
+            if(i &amp; (1 &lt;&lt; j))
+            {
+                tw += w[j];
+                tp += p[j];
+            }
+        }
+        if(tw &lt;= cap &amp;&amp; tp &gt; maxp)
+        {
+            maxp = tp;
+            best = i;
+        }
+    }
+    printf(&quot;\nItems included are\nItem\tweight\tprofit\n&quot;);
+    for(j = 0; j &lt; n; j++)
+    {
+        if(best &amp; (1 &lt;&lt; j))
+            printf(&quot;%d\t%d\t%d\n&quot;, j + 1, w[j], p[j]);
+    }
+    printf(&quot;Total profit = %d\n&quot;, maxp);
+}
+
+
+/* ===================== 3b) Knapsack - Greedy ===================== */
+#include&lt;stdio.h&gt;
+
+void knapsack(int n, float weight[], float profit[], float capacity)
+{
+    float x[20], tp = 0;
+    int i;
+    float u;
+    u = capacity;
+    for(i = 0; i &lt; n; i++)
+        x[i] = 0.0;
+    for(i = 0; i &lt; n; i++)
+    {
+        if(weight[i] &gt; u)
+            break;
+        else
+        {
+            x[i] = 1.0;
+            tp = tp + profit[i];
+            u = u - weight[i];
+        }
+    }
+    if(i &lt; n)
+        x[i] = (u / weight[i]);
+    tp = tp + (x[i] * profit[i]);
+    printf(&quot;\nThe result vector is:- &quot;);
+    for(i = 0; i &lt; n; i++)
+        printf(&quot;%f\t&quot;, x[i]);
+    printf(&quot;\nMaximum profit is:- %f&quot;, tp);
+}
+
+int main()
+{
+    float weight[20], profit[20], capacity;
+    int num, i, j;
+    float ratio[20], temp;
+    printf(&quot;\nEnter the no. of objects:- &quot;);
+    scanf(&quot;%d&quot;, &amp;num);
+    printf(&quot;\nEnter the weights of %d objects :- &quot;, num);
+    for(i = 0; i &lt; num; i++)
+        scanf(&quot;%f&quot;, &amp;weight[i]);
+    printf(&quot;\nEnter the profits of %d objects :- &quot;, num);
+    for(i = 0; i &lt; num; i++)
+        scanf(&quot;%f&quot;, &amp;profit[i]);
+    printf(&quot;\nEnter the capacity of knapsack:- &quot;);
+    scanf(&quot;%f&quot;, &amp;capacity);
+    for(i = 0; i &lt; num; i++)
+        ratio[i] = profit[i] / weight[i];
+    for(i = 0; i &lt; num; i++)
+    {
+        for(j = 0; j &lt; num - i - 1; j++)
+        {
+            if(ratio[j] &lt; ratio[j + 1])
+            {
+                temp = ratio[j];
+                ratio[j] = ratio[j + 1];
+                ratio[j + 1] = temp;
+
+                temp = weight[j];
+                weight[j] = weight[j + 1];
+                weight[j + 1] = temp;
+
+                temp = profit[j];
+                profit[j] = profit[j + 1];
+                profit[j + 1] = temp;
+            }
+        }
+    }
+    knapsack(num, weight, profit, capacity);
+    return(0);
+}
+
+
+/* ===================== 3c) 0/1 Knapsack - Dynamic Programming ===================== */
+#include&lt;stdio.h&gt;
+int w[10], p[10], v[10][100], n, i, j, cap, x[10] = {0};
+
+int max(int i, int j)
+{
+    return ((i &gt; j) ? i : j);
+}
+
+int knap(int i, int j)
+{
+    int value;
+    if(v[i][j] &lt; 0)
+    {
+        if(j &lt; w[i])
+            value = knap(i - 1, j);
+        else
+            value = max(knap(i - 1, j), p[i] + knap(i - 1, j - w[i]));
+        v[i][j] = value;
+    }
+    return(v[i][j]);
+}
+
+void main()
+{
+    int profit, count = 0;
+    printf(&quot;\nEnter the number of elements\n&quot;);
+    scanf(&quot;%d&quot;, &amp;n);
+    printf(&quot;Enter the profit and weights of the elements\n&quot;);
+    for(i = 1; i &lt;= n; i++)
+    {
+        printf(&quot;For item no %d\n&quot;, i);
+        scanf(&quot;%d%d&quot;, &amp;p[i], &amp;w[i]);
+    }
+    printf(&quot;\nEnter the capacity \n&quot;);
+    scanf(&quot;%d&quot;, &amp;cap);
+    for(i = 0; i &lt;= n; i++)
+    {
+        for(j = 0; j &lt;= cap; j++)
+        {
+            if((i == 0) || (j == 0))
+                v[i][j] = 0;
+            else
+                v[i][j] = -1;
+        }
+    }
+    profit = knap(n, cap);
+    i = n;
+    j = cap;
+    while(j != 0 &amp;&amp; i != 0)
+    {
+        if(v[i][j] != v[i - 1][j])
+        {
+            x[i] = 1;
+            j = j - w[i];
+            i--;
+        }
+        else
+            i--;
+    }
+    printf(&quot;Items included are\n&quot;);
+    printf(&quot;Sl.no\tweight\tprofit\n&quot;);
+    for(i = 1; i &lt;= n; i++)
+    {
+        if(x[i])
+            printf(&quot;%d\t%d\t%d\n&quot;, ++count, w[i], p[i]);
+    }
+    printf(&quot;Total profit = %d\n&quot;, profit);
+}
+
+
+/* ===================== 4a) Prim&#x27;s Algorithm ===================== */
+#include&lt;stdio.h&gt;
+int a, b, u, v, n, i, j, ne = 1;
+int visited[10] = {0}, min, mincost = 0, cost[10][10];
+
+void main()
+{
+    printf(&quot;\n Enter the number of nodes:&quot;);
+    scanf(&quot;%d&quot;, &amp;n);
+    printf(&quot;\n Enter the adjacency matrix:\n&quot;);
+    for(i = 1; i &lt;= n; i++)
+    {
+        for(j = 1; j &lt;= n; j++)
+        {
+            scanf(&quot;%d&quot;, &amp;cost[i][j]);
+            if(cost[i][j] == 0)
+                cost[i][j] = 999;
+        }
+    }
+    visited[1] = 1;
+    printf(&quot;\n&quot;);
+    while(ne &lt; n)
+    {
+        for(i = 1, min = 999; i &lt;= n; i++)
+        {
+            for(j = 1; j &lt;= n; j++)
+            {
+                if(cost[i][j] &lt; min)
+                {
+                    if(visited[i] != 0)
+                    {
+                        min = cost[i][j];
+                        a = u = i;
+                        b = v = j;
+                    }
+                }
+            }
+        }
+        if(visited[u] == 0 || visited[v] == 0)
+        {
+            printf(&quot;\n Edge %d:(%d %d) cost:%d&quot;, ne++, a, b, min);
+            mincost += min;
+            visited[b] = 1;
+        }
+        cost[a][b] = cost[b][a] = 999;
+    }
+    printf(&quot;\n Minimum cost=%d&quot;, mincost);
+}
+
+
+/* ===================== 4b) Kruskal&#x27;s Algorithm ===================== */
+#include&lt;stdio.h&gt;
+#include&lt;stdlib.h&gt;
+int i, j, k, a, b, u, v, n, ne = 1;
+int min, mincost = 0, cost[9][9], parent[9];
+int find(int);
+int uni(int, int);
+
+void main()
+{
+    printf(&quot;\n\n\tImplementation of Kruskal&#x27;s algorithm\n\n&quot;);
+    printf(&quot;\nEnter the no. of vertices\n&quot;);
+    scanf(&quot;%d&quot;, &amp;n);
+    printf(&quot;\nEnter the cost adjacency matrix\n&quot;);
+    for(i = 1; i &lt;= n; i++)
+    {
+        for(j = 1; j &lt;= n; j++)
+        {
+            scanf(&quot;%d&quot;, &amp;cost[i][j]);
+            if(cost[i][j] == 0)
+                cost[i][j] = 999;
+        }
+    }
+    printf(&quot;\nThe edges of Minimum Cost Spanning Tree are\n\n&quot;);
+    while(ne &lt; n)
+    {
+        for(i = 1, min = 999; i &lt;= n; i++)
+        {
+            for(j = 1; j &lt;= n; j++)
+            {
+                if(cost[i][j] &lt; min)
+                {
+                    min = cost[i][j];
+                    a = u = i;
+                    b = v = j;
+                }
+            }
+        }
+        u = find(u);
+        v = find(v);
+        if(uni(u, v))
+        {
+            printf(&quot;\n%d edge (%d,%d) =%d\n&quot;, ne++, a, b, min);
+            mincost += min;
+        }
+        cost[a][b] = cost[b][a] = 999;
+    }
+    printf(&quot;\n\tMinimum cost = %d\n&quot;, mincost);
+}
+
+int find(int i)
+{
+    while(parent[i])
+        i = parent[i];
+    return i;
+}
+
+int uni(int i, int j)
+{
+    if(i != j)
+    {
+        parent[j] = i;
+        return 1;
+    }
+    return 0;
+}
+</pre>
+</main>
+<script>
+function copy(text,btn,el){const done=()=>{const o=btn.textContent;btn.textContent="Copied";setTimeout(()=>btn.textContent=o,1500)};
+const sel=()=>{const r=document.createRange();r.selectNodeContents(el);const s=getSelection();s.removeAllRanges();s.addRange(r);btn.textContent="Selected, press copy"};
+try{navigator.clipboard.writeText(text).then(done,sel)}catch(e){sel()}}
+document.querySelectorAll("section button").forEach(b=>b.addEventListener("click",()=>{const el=document.getElementById("c"+b.dataset.i);copy(el.textContent,b,el)}));
+document.getElementById("all").addEventListener("click",e=>{const el=document.getElementById("allsrc");copy(el.textContent,e.target,document.querySelector("main"))});
+</script>
+</body>
+</html>
